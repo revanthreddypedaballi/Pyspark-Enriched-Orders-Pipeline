@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: airflow
     volumes:
       - postgres_db:/var/lib/postgresql/data
-      
+
   airflow-init:
     image: apache/airflow:2.8.1
     depends_on:
@@ -28,8 +28,6 @@ services:
         airflow db init &&
         airflow users create --username admin --password admin --firstname Revanth --lastname Reddy --role Admin --email admin@example.com"
 
-
-  services:
   webserver:
     build: .
     depends_on:
@@ -65,5 +63,6 @@ services:
       - "4041:4040"
     volumes:
       - ./spark_jobs:/opt/etl
+
 volumes:
   postgres_db:
