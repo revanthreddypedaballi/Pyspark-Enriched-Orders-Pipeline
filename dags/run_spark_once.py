@@ -4,7 +4,7 @@ from datetime import datetime
 
 with DAG(
     dag_id="run_spark_once",
-    start_date=dtaetime(2025, 7, 30),
+    start_date=datetime(2025, 7, 30),
     schedule_interval=None,
     catchup=False,
 ) as dag:
