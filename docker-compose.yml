@@ -16,9 +16,8 @@ services:
       - postgres
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__WEBSERVER__SECRET_KEY: 'my_super_secret_key_12345'
-       postgresql+psycopg2://airflow:airflow@postgres/airflow
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: admin
       _AIRFLOW_WWW_USER_PASSWORD: admin
@@ -36,9 +35,8 @@ services:
       - postgres
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__WEBSERVER__SECRET_KEY: 'my_super_secret_key_12345'
-       postgresql+psycopg2://airflow:airflow@postgres/airflow
     volumes:
       - ./dags:/opt/airflow/dags
       - ./spark_jobs:/opt/etl
@@ -53,9 +51,8 @@ services:
       - postgres
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN:
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__WEBSERVER__SECRET_KEY: 'my_super_secret_key_12345'
-       postgresql+psycopg2://airflow:airflow@postgres/airflow
     volumes:
       - ./dags:/opt/airflow/dags
       - ./spark_jobs:/opt/etl
