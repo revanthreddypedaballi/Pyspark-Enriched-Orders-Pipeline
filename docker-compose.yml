@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
       
- airflow-init:
+  airflow-init:
     image: apache/airflow:2.8.1
     depends_on:
       - postgres
