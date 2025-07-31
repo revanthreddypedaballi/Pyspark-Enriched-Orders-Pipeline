@@ -64,7 +64,7 @@ services:
     environment:
       - SPARK_MODE=master
     ports:
-      - "4040:4040"
+      - "4041:4040"
     volumes:
       - ./spark_jobs:/opt/etl
 volumes:
