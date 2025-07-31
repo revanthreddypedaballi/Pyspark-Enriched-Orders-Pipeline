@@ -30,7 +30,7 @@ services:
 
 
   webserver:
-    image: apache/airflow:2.8.1
+    build: apache/airflow:2.8.1
     depends_on:
       - postgres
     environment:
@@ -47,7 +47,7 @@ services:
     command: webserver
 
   scheduler:
-    image: apache/airflow:2.8.1
+    build: apache/airflow:2.8.1
     depends_on:
       - webserver
       - postgres
