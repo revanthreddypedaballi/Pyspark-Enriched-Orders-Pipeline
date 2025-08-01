@@ -3,27 +3,24 @@ from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOpe
 from datetime import datetime
 
 default_args = {
-    "owner": "airflow",
+    'owner': 'airflow',
+    'start_date': datetime(2024, 1, 1),
+    'retries': 1
 }
 
 with DAG(
-    dag_id="run_spark_once",
-    default_args=default_args,
-    start_date=datetime(2025, 7, 31),
+    dag_id='run_spark_once',
     schedule_interval=None,
     catchup=False,
-    tags=["spark"],
+    default_args=default_args,
+    description='Trigger a Spark job from Airflow',
 ) as dag:
 
-    run_spark = SparkSubmitOperator(
-        task_id="run_spark_transform",
-        application="/opt/etl/transformation.py",
-        conn_id="spark_standalone",
-        verbose=True,
-        application_args=[],
-        conf={"spark.master": "spark://spark-master:7077"}
+    submit_job = SparkSubmitOperator(
+        task_id='submit_spark_job',
+        application='/opt/airflow/dags/spark_jobs/spark_etl_job.py',
+        conn_id='spark_default',
+        verbose=True
     )
 
-    run_spark  # This is okay, just triggers registration
-
-
+    submit_job
