@@ -1,14 +1,14 @@
+# Dockerfile
 FROM apache/airflow:2.8.1
 
 USER root
 
-# Install Java (required for SparkSubmit)
+# Install Java and other OS packages
 RUN apt-get update && \
-    apt-get install -y openjdk-11-jdk-headless && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install -y openjdk-11-jdk-headless curl && \
+    apt-get clean
 
-# Switch to airflow user
 USER airflow
 
-# Install the Spark provider and PySpark
+# Install Spark and Airflow Spark Provider
 RUN pip install apache-airflow-providers-apache-spark==4.4.0 pyspark==3.5.0
