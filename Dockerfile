@@ -2,7 +2,11 @@ FROM apache/airflow:2.8.1
 
 USER root
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /var/lib/apt/lists/partial && \
+    chmod -R 755 /var/lib/apt/lists && \
+    apt-get update --allow-releaseinfo-change && \
+    apt-get install -y --no-install-recommends \
     openjdk-11-jdk-headless procps curl gnupg2 ca-certificates && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
