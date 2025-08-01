@@ -22,7 +22,7 @@ services:
       _AIRFLOW_WWW_USER_USERNAME: admin
       _AIRFLOW_WWW_USER_PASSWORD: admin
     ports:
-      - "8020:8020"
+      - "8090:8020"  # Changed from 8120 to 8090 for web UI
     volumes:
       - ./dags:/opt/airflow/dags
       - ./spark_jobs:/opt/etl
@@ -51,8 +51,8 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     ports:
-      - "7077:7077"
-      - "8020:8020"
+      - "7077:7077"    # Spark master port
+      - "8091:8020"    # Changed to avoid conflict
     volumes:
       - ./spark_jobs:/opt/etl
 
@@ -68,7 +68,7 @@ services:
     depends_on:
       - spark-master
     ports:
-      - "8020:8020"
+      - "8092:8020"    # Changed to avoid conflict
     volumes:
       - ./spark_jobs:/opt/etl
 
