@@ -22,7 +22,7 @@ services:
       _AIRFLOW_WWW_USER_USERNAME: admin
       _AIRFLOW_WWW_USER_PASSWORD: admin
     ports:
-      - "8070:8070"
+      - "8020:8020"
     volumes:
       - ./dags:/opt/airflow/dags
       - ./spark_jobs:/opt/etl
@@ -52,7 +52,7 @@ services:
       - SPARK_SSL_ENABLED=no
     ports:
       - "7077:7077"
-      - "8070:8070"
+      - "8020:8020"
     volumes:
       - ./spark_jobs:/opt/etl
 
@@ -68,7 +68,7 @@ services:
     depends_on:
       - spark-master
     ports:
-      - "8070:8070"
+      - "8020:8020"
     volumes:
       - ./spark_jobs:/opt/etl
 
