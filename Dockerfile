@@ -1,15 +1,18 @@
 FROM apache/airflow:2.8.1
 
+# Switch to root to install system packages
 USER root
 
-RUN rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /var/lib/apt/lists/partial && \
-    chmod -R 755 /var/lib/apt/lists && \
-    apt-get update --allow-releaseinfo-change && \
-    apt-get install -y --no-install-recommends \
-    openjdk-11-jdk-headless procps curl gnupg2 ca-certificates && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install Java (required for PySpark) and cleanup
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jdk-headless && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# Switch back to airflow user to install Python packages
 USER airflow
 
-RUN pip install apache-airflow-providers-apache-spark==4.4.0 pyspark==3.5.0
+# Install required Python packages: PySpark + Spark provider
+RUN pip install \
+    apache-airflow-providers-apache-spark==4.4.0 \
+    pyspark==3.5.0
