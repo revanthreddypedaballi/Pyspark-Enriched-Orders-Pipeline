@@ -15,14 +15,15 @@ with DAG(
     tags=["spark"],
 ) as dag:
 
-    run_spark = SparkSubmitOperator(
-        task_id="run_spark_transform",
-        application="/opt/etl/transformation.py",
-        conn_id="spark_default",
-        verbose=True,
-        conf={"spark.master": "local[*]"}, 
-        application_args=[],
-    )
+run_spark = SparkSubmitOperator(
+    task_id="run_spark_transform",
+    application="/opt/etl/transformation.py",
+    conn_id="spark_standalone",
+    verbose=True,
+    application_args=[],
+    conf={"spark.master": "spark://spark-master:7077"}
+)
+
 
     run_spark
 

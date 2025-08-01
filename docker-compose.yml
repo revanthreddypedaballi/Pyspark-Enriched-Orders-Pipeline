@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
 
-  airflow-init:
+  airflow-webserver:
     image: apache/airflow:2.8.1
     depends_on:
       - postgres
@@ -21,33 +21,17 @@ services:
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: admin
       _AIRFLOW_WWW_USER_PASSWORD: admin
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./spark_jobs:/opt/etl
-    entrypoint: >
-      bash -c "
-        airflow db init &&
-        airflow users create --username admin --password admin --firstname Revanth --lastname Reddy --role Admin --email admin@example.com"
-
-  webserver:
-    build: .
-    depends_on:
-      - postgres
-    environment:
-      AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-      AIRFLOW__WEBSERVER__SECRET_KEY: 'my_super_secret_key_12345'
-    volumes:
-      - ./dags:/opt/airflow/dags
-      - ./spark_jobs:/opt/etl
     ports:
       - "8081:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./spark_jobs:/opt/etl
     command: webserver
 
-  scheduler:
-    build: .
+  airflow-scheduler:
+    image: apache/airflow:2.8.1
     depends_on:
-      - webserver
+      - airflow-webserver
       - postgres
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -58,12 +42,33 @@ services:
       - ./spark_jobs:/opt/etl
     command: scheduler
 
-  spark:
+  spark-master:
     image: bitnami/spark:3.5
     environment:
       - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
     ports:
-      - "4041:4040"
+      - "7077:7077"
+      - "8080:8080"
+    volumes:
+      - ./spark_jobs:/opt/etl
+
+  spark-worker:
+    image: bitnami/spark:3.5
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
     volumes:
       - ./spark_jobs:/opt/etl
 
